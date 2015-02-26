@@ -1,0 +1,39 @@
+{
+    "name": "laradic/config",
+    "description": "Laravel 5 config package",
+    "homepage": "https://github.com/laradic/config",
+    "keywords": [
+        "bench",
+        "debug",
+        "benchmark",
+        "generator",
+        "test",
+        "testing",
+        "laravel"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Robin Radic",
+            "email": "robin@radic.nl",
+            "role": "Package Author/Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "laradic/support": "dev-master"
+    },
+    "scripts": {
+    },
+    "autoload": {
+        "psr-4": {
+            "Laradic\\Config\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Laradic\\Tests\\Config\\": "tests/"
+        }
+    },
+    "minimum-stability": "stable"
+}
