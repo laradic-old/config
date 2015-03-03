@@ -1,12 +1,12 @@
-<?php 
+<?php
  /**
- * Part of the Radic packages. 
+ * Part of the Radic packages.
  */
 namespace Laradic\Config\Contracts;
 /**
  * Class PackageRepository
  *
- * @package     Radic\Config\Contracts
+ * @package     Laradic\Config\Contracts
  * @author      Robin Radic
  * @license     MIT
  * @copyright   2011-2015, Robin Radic

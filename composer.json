@@ -23,6 +23,14 @@
         "php": ">=5.4.0",
         "laradic/support": "dev-master"
     },
+    "require-dev": {
+        "laradic/dev": "dev-master",
+        "laradic/debug": "dev-master",
+        "laradic/support": "dev-master",
+        "gooh/interface-distiller": "dev-master",
+        "radic/tmp-underscore-php": "dev-master"
+
+    },
     "scripts": {
     },
     "autoload": {
