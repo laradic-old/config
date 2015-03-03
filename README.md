@@ -29,13 +29,20 @@ Development build
 ```php
 Config::set('myconfig.path', base_path('test'));
 Config::save('my-connection');
+Config::save('db');
+Config::save('yml');
+Config::save('array');
 Config::save(array(
     'driver' => 'array',
-    'path' => storage_path('radic_config')
+    'path' => storage_path('laradic/config')
 ));
 
 // Then another time
 Config::get('myconfig.path'); //output> path/to/base/test
+
+// Namespaces
+Config::get('myvendor/mypackage::mykey')
+Config::get('myvendor/mypackage::configfile2.mykey2')
 ```
 
 ### Copyright/License

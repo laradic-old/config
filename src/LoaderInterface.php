@@ -1,5 +1,20 @@
-<?php namespace Laradic\Config;
+<?php
+/**
+ * Part of the Laradic packages.
+ * MIT License and copyright information bundled with this package in the LICENSE file.
+ */
+namespace Laradic\Config;
 
+/**
+ * Interface LoaderInterface
+ *
+ * @package     Laradic\Config
+ * @author      Robin Radic
+ * @author      Mior Muhammad Zaki
+ * @author      Taylor Otwell
+ * @license     MIT
+ * @copyright   Check the embedded LICENSE file
+ */
 interface LoaderInterface
 {
     /**
@@ -31,7 +46,7 @@ interface LoaderInterface
     public function addNamespace($namespace, $hint);
 
     /**
-     * Returns all registered namespaces with the config
+     * Returns all registered vendor with the config
      * loader.
      *
      * @return array

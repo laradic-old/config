@@ -1,7 +1,22 @@
-<?php namespace Laradic\Config;
+<?php
+/**
+ * Part of the Laradic packages.
+ * MIT License and copyright information bundled with this package in the LICENSE file.
+ */
+namespace Laradic\Config;
 
 use Illuminate\Filesystem\Filesystem;
 
+/**
+ * Class FileLoader
+ *
+ * @package     Laradic\Config
+ * @author      Robin Radic
+ * @author      Mior Muhammad Zaki
+ * @author      Taylor Otwell
+ * @license     MIT
+ * @copyright   Check the embedded LICENSE file
+ */
 class FileLoader implements LoaderInterface
 {
     /**
@@ -26,7 +41,7 @@ class FileLoader implements LoaderInterface
     protected $hints = [];
 
     /**
-     * A cache of whether namespaces and groups exists.
+     * A cache of whether vendor and groups exists.
      *
      * @var array
      */
@@ -209,7 +224,7 @@ class FileLoader implements LoaderInterface
     }
 
     /**
-     * Returns all registered namespaces with the config
+     * Returns all registered vendor with the config
      * loader.
      *
      * @return array

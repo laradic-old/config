@@ -1,7 +1,23 @@
-<?php namespace Laradic\Config\Traits;
+<?php
+/**
+ * Part of the Laradic packages.
+ * MIT License and copyright information bundled with this package in the LICENSE file.
+ */
+namespace Laradic\Config\Traits;
 
 use Laradic\Config\LoaderInterface;
 
+/**
+ * CascadingTrait
+ *
+ * @package     Laradic\Config
+ * @subpackage  Traits
+ * @author      Robin Radic
+ * @author      Mior Muhammad Zaki
+ * @author      Taylor Otwell
+ * @license     MIT
+ * @copyright   Check the embedded LICENSE file
+ */
 trait CascadingTrait
 {
     /**
@@ -31,7 +47,7 @@ trait CascadingTrait
     }
 
     /**
-     * Returns all registered namespaces with the config
+     * Returns all registered vendor with the config
      * loader.
      *
      * @return array

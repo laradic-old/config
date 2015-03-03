@@ -1,6 +1,7 @@
 <?php
 /**
- * Part of the Radic packages.
+ * Part of the Laradic packages.
+ * MIT License and copyright information bundled with this package in the LICENSE file.
  */
 namespace Laradic\Config;
 
@@ -10,11 +11,12 @@ use Laradic\Config\Traits\ConfigProviderTrait;
 /**
  * Class ConfigServiceProvider
  *
- * @package     Laradic\Debug
+ * @package     Laradic\Config
  * @author      Robin Radic
+ * @author      Mior Muhammad Zaki
+ * @author      Taylor Otwell
  * @license     MIT
- * @copyright   2011-2015, Robin Radic
- * @link        http://radic.mit-license.org
+ * @copyright   Check the embedded LICENSE file
  */
 class ConfigServiceProvider extends ServiceProvider
 {
@@ -24,6 +26,6 @@ class ConfigServiceProvider extends ServiceProvider
     public function register()
     {
         $this->addConfigComponent('laradic/config', 'laradic/config', realpath(__DIR__ . '/../config'));
-        $this->app->register('Laradic\Config\Providers\PublisherProvider');
+        $this->app->register('Laradic\Config\Providers\PublisherServiceProvider');
     }
 }

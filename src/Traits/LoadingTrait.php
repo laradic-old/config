@@ -5,7 +5,7 @@ use Closure;
 trait LoadingTrait
 {
     /**
-     * The after load callbacks for namespaces.
+     * The after load callbacks for vendor.
      *
      * @var array
      */

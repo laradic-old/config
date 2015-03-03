@@ -13,7 +13,7 @@ use ReflectionClass;
  * @package     Laradic\Config\Traits
  * @author      Robin Radic
  * @license     MIT
- * @copyright   2011-2015, Robin Radic
+ * @copyright   2011-${YEAR}, Robin Radic
  * @link        http://radic.mit-license.org
  */
 trait ConfigProviderTrait

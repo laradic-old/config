@@ -2,7 +2,7 @@
 /**
  * Part of the Radic packages.
  */
-namespace Laradic\Config;
+namespace Laradic\Config\Providers;
 
 use Illuminate\Console\Application as Artisan;
 use Illuminate\Support\ServiceProvider;
