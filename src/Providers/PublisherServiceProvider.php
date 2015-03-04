@@ -6,6 +6,9 @@ namespace Laradic\Config\Providers;
 
 use Illuminate\Console\Application as Artisan;
 use Illuminate\Support\ServiceProvider;
+use Laradic\Config\Publisher;
+use Laradic\Config\Repository;
+use Symfony\Component\VarDumper\VarDumper;
 
 /**
  * Class PublisherServiceProvider
