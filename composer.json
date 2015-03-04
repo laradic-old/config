@@ -3,12 +3,9 @@
     "description": "Laravel 5 config package",
     "homepage": "https://github.com/laradic/config",
     "keywords": [
-        "bench",
-        "debug",
-        "benchmark",
-        "generator",
-        "test",
-        "testing",
+        "config",
+        "persistent",
+        "namespace",
         "laravel"
     ],
     "license": "MIT",
