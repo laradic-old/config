@@ -16,6 +16,8 @@
             "role": "Package Author/Developer"
         }
     ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
         "php": ">=5.4.0",
         "laradic/support": "dev-master"
@@ -39,6 +41,5 @@
         "psr-4": {
             "Laradic\\Tests\\Config\\": "tests/"
         }
-    },
-    "minimum-stability": "stable"
+    }
 }
