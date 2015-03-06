@@ -1,0 +1,46 @@
+menu:
+  - name: Overview
+    icon: fa fa-eye
+    page: index
+
+  - name: Getting started
+    icon: fa fa-cloud
+    children:
+      Downloading: your-own-docsite/downloading
+      Installing: your-own-docsite/downloading
+      Configuration: your-own-docsite/downloading
+
+  - name: Writing documentation
+    icon: fa fa-pencil
+    children:
+      Simple documentation: writing-documentation/simple-documentation
+      File structure: writing-documentation/structure
+      Advanced documentation: writing-documentation/advanced-stuff
+
+  - name: Custom pages
+    icon: fa fa-pencil
+    children:
+      DoComment: writing-documentation/do-comment
+      Markdown: writing-documentation/markdown
+      Github compatible: writing-documentation/github-compatible
+
+  - name: Extending
+    icon: fa fa-pencil
+    children:
+      DoComment: writing-documentation/do-comment
+      Markdown: writing-documentation/markdown
+      Github compatible: writing-documentation/github-compatible
+
+  - name: Theming
+    icon: fa fa-pencil
+    children:
+      DoComment: writing-documentation/do-comment
+      Markdown: writing-documentation/markdown
+      Github compatible: writing-documentation/github-compatible
+
+  - name: Contributing
+    icon: fa fa-pencil
+    children:
+      DoComment: writing-documentation/do-comment
+      Markdown: writing-documentation/markdown
+      Github compatible: writing-documentation/github-compatible
