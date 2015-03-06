@@ -5,7 +5,7 @@
  */
 namespace Laradic\Config;
 
-use Illuminate\Support\ServiceProvider;
+use Laradic\Support\ServiceProvider;
 use Laradic\Config\Traits\ConfigProviderTrait;
 
 /**
@@ -20,16 +20,23 @@ use Laradic\Config\Traits\ConfigProviderTrait;
  */
 class ConfigServiceProvider extends ServiceProvider
 {
-    use ConfigProviderTrait;
+    protected $configFiles = ['laradic_config'];
+
+    /** @var string */
+    protected $dir = __DIR__;
 
     /** @inheritdoc */
     public function register()
     {
-        $this->addConfigComponent('laradic/config', 'laradic/config', realpath(__DIR__ . '/../config'));
-        $loader = $this->app->config->get('laradic/config::loader');
+       # $this->addConfigComponent('laradic/config', 'laradic/config', realpath(__DIR__ . '/../config'));
+        $this->publishes([
+            __DIR__.'/../database/migrations/' => base_path('/database/migrations')
+        ], 'migrations');
+
+
         $this->app->register('Laradic\Config\Providers\PublisherServiceProvider');
 
-        if($loader === 'db')
+        if($this->app->config->get('laradic_config.loader') === 'db')
         {
             $this->app->register('Laradic\Config\Providers\DatabaseLoaderServiceProvider');
         }

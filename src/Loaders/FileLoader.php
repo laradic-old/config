@@ -19,6 +19,15 @@ use Illuminate\Filesystem\Filesystem;
  */
 class FileLoader implements LoaderInterface
 {
+
+    /**
+     * The config repository instance.
+     *
+     * @var \Illuminate\Config\Repository
+     */
+    protected $repository;
+
+
     /**
      * The filesystem instance.
      *

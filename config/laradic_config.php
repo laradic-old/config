@@ -13,7 +13,7 @@ return array(
      *      db:     The database loader. Extends the file loader, enables saving/loading from database.
      *              If a config item doesn't exist in the DB table, it will fallback to the file loader
      */
-    'loader' => 'file',
+    'loader' => 'db',
 
     /*
      *
