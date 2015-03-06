@@ -5,7 +5,8 @@
  */
 namespace Laradic\Config\Traits;
 
-use Laradic\Config\LoaderInterface;
+use Laradic\Config\Loaders\LoaderInterface;
+
 
 /**
  * CascadingTrait
@@ -20,6 +21,7 @@ use Laradic\Config\LoaderInterface;
  */
 trait CascadingTrait
 {
+
     /**
      * The loader implementation.
      *
@@ -37,8 +39,8 @@ trait CascadingTrait
     /**
      * Add a new namespace to the loader.
      *
-     * @param  string  $namespace
-     * @param  string  $hint
+     * @param  string $namespace
+     * @param  string $hint
      * @return void
      */
     public function addNamespace($namespace, $hint)
@@ -70,7 +72,7 @@ trait CascadingTrait
     /**
      * Set the loader implementation.
      *
-     * @param  \Laradic\Config\LoaderInterface  $loader
+     * @param  \Laradic\Config\LoaderInterface $loader
      * @return void
      */
     public function setLoader(LoaderInterface $loader)

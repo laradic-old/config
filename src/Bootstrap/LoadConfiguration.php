@@ -1,6 +1,6 @@
 <?php namespace Laradic\Config\Bootstrap;
 
-use Laradic\Config\FileLoader;
+use Laradic\Config\Loaders\FileLoader;
 use Laradic\Config\Repository;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Contracts\Foundation\Application;

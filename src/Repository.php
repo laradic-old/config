@@ -9,6 +9,7 @@ use ArrayAccess;
 use Illuminate\Contracts\Config\Repository as ConfigContract;
 use Illuminate\Support\Arr;
 use Laradic\Config\Contracts\PackageRepository;
+use Laradic\Config\Loaders\LoaderInterface;
 use Laradic\Config\Traits\CascadingTrait;
 use Laradic\Config\Traits\LoadingTrait;
 use Laradic\Support\Traits\NamespacedItemResolverTrait;
@@ -173,7 +174,7 @@ class Repository extends \Illuminate\Config\Repository implements ArrayAccess, C
      * Set a given collections of configuration value.
      *
      * @param  array $items
-     * @return void
+     * @return Repository
      */
     protected function setItems(array $items)
     {
@@ -181,6 +182,8 @@ class Repository extends \Illuminate\Config\Repository implements ArrayAccess, C
         {
             $this->set($key, $value);
         }
+
+        return $this;
     }
 
     /**

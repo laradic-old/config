@@ -1,22 +1,33 @@
 <?php
  /**
- * Part of the Radic packages. 
+ * Part of the Radic packages.
  */
-
 return array(
-    'connection' => 'array',
-    'connections' => array(
-        'array' => array(
-            'driver' => 'Laradic\Config\Drivers\ArrayDriver',
-            'destination' => storage_path('laradic/config/array')
-        ),
-        'yaml' => array(
-            'driver' => 'Laradic\Config\Drivers\YamlDriver',
-            'destination' => storage_path('laradic/config/yaml')
-        ),
+    /*
+     * The loader that should be used to load the configuration items
+     * loaders:
+     *      file:   The standard file loader. enables saving/loading from files.
+     *              Saved config items will be placed in the storage path. It will use the following priority chain:
+     *              saved config item > published config item > non-published config item
+     *
+     *      db:     The database loader. Extends the file loader, enables saving/loading from database.
+     *              If a config item doesn't exist in the DB table, it will fallback to the file loader
+     */
+    'loader' => 'file',
+
+    /*
+     *
+     */
+    'loaders' => array(
+        'file' => array(),
         'db' => array(
-            'driver' => 'Laradic\Config\Drivers\DatabaseDriver',
-            'destination' => 'laradic_config' # Table name
+            'table' => 'config'
         )
-    )
+    ),
+
+    /*
+     * Register the ConsoleServiceProvider to add additional console commands
+     * commands: ...
+     */
+    'console' => false
 );

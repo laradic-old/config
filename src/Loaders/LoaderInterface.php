@@ -3,7 +3,7 @@
  * Part of the Laradic packages.
  * MIT License and copyright information bundled with this package in the LICENSE file.
  */
-namespace Laradic\Config;
+namespace Laradic\Config\Loaders;
 
 /**
  * Interface LoaderInterface
