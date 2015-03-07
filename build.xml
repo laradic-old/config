@@ -42,9 +42,14 @@
         <property name="clean.done" value="true"/>
     </target>
 
-    <target name="vendor" unless="vendor.done" description="Cleanup composer and vendor">
+    <target name="clean.vendor" unless="clean.vendor.done" description="Cleanup vendor">
         <delete dir="${project.basedir}/vendor"/>
         <delete file="${project.basedir}/composer.lock"/>
+        <property name="clean.vendor.done" value="true"/>
+    </target>
+
+
+    <target name="vendor" depends="clean.vendor" unless="vendor.done" description="Cleanup composer and vendor">
         <exec executable="composer" logoutput="true">
             <arg line="install"/>
         </exec>
