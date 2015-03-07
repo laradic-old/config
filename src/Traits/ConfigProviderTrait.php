@@ -10,10 +10,10 @@ use ReflectionClass;
 /**
  * Class ConfigProviderTrait
  *
- * @package     Laradic\Config\Traits
+ * @package     Laradic\Config
  * @author      Robin Radic
  * @license     MIT
- * @copyright   2011-${YEAR}, Robin Radic
+ * @copyright   2011-2015, Robin Radic
  * @link        http://radic.mit-license.org
  */
 trait ConfigProviderTrait

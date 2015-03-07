@@ -3,6 +3,7 @@
  * Part of the Radic packages.
  */
 namespace Laradic\Config\Contracts;
+
 /**
  * Class PackageRepository
  *
@@ -12,7 +13,6 @@ namespace Laradic\Config\Contracts;
  * @copyright   2011-2015, Robin Radic
  * @link        http://radic.mit-license.org
  */
-
 interface PackageRepository
 {
     /**

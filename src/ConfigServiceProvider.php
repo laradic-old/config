@@ -28,17 +28,12 @@ class ConfigServiceProvider extends ServiceProvider
     /** @inheritdoc */
     public function register()
     {
-       # $this->addConfigComponent('laradic/config', 'laradic/config', realpath(__DIR__ . '/../config'));
+        parent::register();
+
         $this->publishes([
             __DIR__.'/../database/migrations/' => base_path('/database/migrations')
         ], 'migrations');
 
-
         $this->app->register('Laradic\Config\Providers\PublisherServiceProvider');
-
-        if($this->app->config->get('laradic_config.loader') === 'db')
-        {
-            $this->app->register('Laradic\Config\Providers\DatabaseLoaderServiceProvider');
-        }
     }
 }

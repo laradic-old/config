@@ -6,6 +6,10 @@
 namespace Laradic\Config\Loaders;
 
 use Illuminate\Filesystem\Filesystem;
+use Laradic\Config\Repository;
+use Laradic\Support\Arr;
+use Laradic\Support\Path;
+use Laradic\Support\Str;
 
 /**
  * Class FileLoader
@@ -23,10 +27,15 @@ class FileLoader implements LoaderInterface
     /**
      * The config repository instance.
      *
-     * @var \Illuminate\Config\Repository
+     * @var \Illuminate\Contracts\Config\Repository
      */
     protected $repository;
 
+    /**
+     * This package it's configuration
+     * @var array
+     */
+    protected $laradicConfig;
 
     /**
      * The filesystem instance.
@@ -69,6 +78,43 @@ class FileLoader implements LoaderInterface
     }
 
     /**
+     * Sets a config value for the loader (i.e. permanently).
+     *
+     * @param  string  $key
+     * @param  mixed   $value
+     * @param  string  $environment
+     * @return void
+     */
+    public function set($key, $value = null, $environment = null)
+    {
+        if ( ! isset($this->repository))
+        {
+            throw new \RuntimeException("Repository is required to set a config value. Use persist() instead.");
+        }
+
+        list($namespace, $group, $item) = $this->repository->parseKey($key);
+        $environment = $environment ? $environment : $this->repository->getEnvironment();
+
+        $path = Str::remove($this->getPath($namespace), Path::canonicalize(base_path()));
+
+        $saveDir = $this->laradicConfig['loaders.file.save_path'] . "{$path}/{$environment}";
+        $saveFile = "{$saveDir}/{$group}.php";
+
+        if(!$this->files->isDirectory($saveDir)){
+            $this->files->makeDirectory($saveDir, 0777, true);
+        }
+
+        $items = [];
+        if($this->files->exists($saveFile)){
+            $items = require $saveFile;
+        }
+
+        $items[$item] = $value;
+
+        $this->files->put($saveFile, "<?php \n return " . var_export($items, true) . ';');
+    }
+
+    /**
      * Load the given configuration group.
      *
      * @param  string  $environment
@@ -106,6 +152,20 @@ class FileLoader implements LoaderInterface
         if ($this->files->exists($file)) {
             $items = $this->mergeEnvironment($items, $file);
         }
+
+
+        // Now we load the saved items that have been saved with set, and merge them over the current items
+        $path = Str::remove($path, Path::canonicalize(base_path()));
+        #$saveDir = $this->repository->get('laradic_config.loaders.file.save_path');
+        $saveDir = $this->laradicConfig['loaders.file.save_path'] . "{$path}/{$environment}";
+        $saveFile = "{$saveDir}/{$group}.php";
+
+        $savedItems = [];
+        if($this->files->exists($saveFile)){
+            $savedItems = require $saveFile;
+        }
+
+        $items = array_merge($items, $savedItems);
 
         return $items;
     }
@@ -262,5 +322,17 @@ class FileLoader implements LoaderInterface
     public function getFilesystem()
     {
         return $this->files;
+    }
+
+    /**
+     * Set the repository instance on the composite loader.
+     *
+     * @param  \Illuminate\Config\Repository  $repository
+     * @return void
+     */
+    public function setRepository(Repository $repository)
+    {
+        $this->repository = $repository;
+        $this->laradicConfig = Arr::dot($repository->get('laradic_config'));
     }
 }

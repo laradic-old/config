@@ -1,6 +1,7 @@
 <?php
- /**
- * Part of the Radic packages.
+/**
+ * Part of the Laradic packages.
+ * MIT License and copyright information bundled with this package in the LICENSE file.
  */
 return array(
     /*
@@ -13,13 +14,15 @@ return array(
      *      db:     The database loader. Extends the file loader, enables saving/loading from database.
      *              If a config item doesn't exist in the DB table, it will fallback to the file loader
      */
-    'loader' => 'db',
+    'loader' => 'file',
 
     /*
      *
      */
     'loaders' => array(
-        'file' => array(),
+        'file' => array(
+            'save_path' => storage_path('laradic_config')
+        ),
         'db' => array(
             'table' => 'config'
         )

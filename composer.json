@@ -1,9 +1,13 @@
 {
     "name": "laradic/config",
-    "description": "Laravel 5 config package",
+    "description": "Laravel 5 config extensions: save to file/db. use namespaces, etc",
     "homepage": "https://github.com/laradic/config",
     "keywords": [
         "config",
+        "database",
+        "namespaces",
+        "db",
+        "save",
         "persistent",
         "namespace",
         "laravel"
@@ -20,22 +24,17 @@
     "prefer-stable": true,
     "require": {
         "php": ">=5.4.0",
-        "laradic/support": "dev-master"
+        "illuminate/config": "~5.0",
+        "laradic/support": "~1.0"
     },
     "require-dev": {
         "laradic/dev": "dev-master",
         "laradic/debug": "dev-master",
-        "laradic/support": "dev-master",
-        "gooh/interface-distiller": "dev-master",
-        "radic/tmp-underscore-php": "dev-master"
-
+        "laradic/support": "dev-master"
     },
     "scripts": {
     },
     "autoload": {
-        "classmap": [
-            "database"
-        ],
         "psr-4": {
             "Laradic\\Config\\": "src/"
         }
