@@ -29,8 +29,7 @@
     },
     "require-dev": {
         "laradic/dev": "dev-master",
-        "laradic/debug": "dev-master",
-        "laradic/support": "dev-master"
+        "laradic/debug": "dev-master"
     },
     "scripts": {
     },
