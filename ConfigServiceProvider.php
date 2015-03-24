@@ -38,7 +38,6 @@ class ConfigServiceProvider extends ServiceProvider
 
         if($app->make('config') instanceof \Laradic\Config\Repository)
         {
-            var_dump('sadfsd');
             $this->app->register('Laradic\Config\Providers\PublisherServiceProvider');
         }
     }

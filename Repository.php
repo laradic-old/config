@@ -49,7 +49,7 @@ class Repository extends \Illuminate\Config\Repository implements ArrayAccess, C
      */
     protected $packages = [];
 
-    /** @var ConfigPublisher[] */
+    /** @var \Laradic\Config\Publisher[] */
     protected $publishers = [];
 
     /** @var \Illuminate\Filesystem\Filesystem  */
@@ -72,7 +72,7 @@ class Repository extends \Illuminate\Config\Repository implements ArrayAccess, C
 
     public function addPublisher($package, $sourcePath)
     {
-        $this->publishers[$package] = ConfigPublisher::create($this->files)
+        $this->publishers[$package] = Publisher::create($this->files)
             ->package($package)
             ->from($sourcePath);
     }
