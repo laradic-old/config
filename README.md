@@ -12,6 +12,18 @@
 - Compatible with laravel 5 default configs. Adding the package will not invalidate your current setup.
 
 #### Installation
+
+###### Composer
+```php
+"laradic/config": "1.*"
+```
+
+###### Service provider
+```php
+"Laradic\Config\ConfigServiceProvider"
+```
+
+###### Bootstrapper
 Replace the default laravel `Illuminate\Foundation\Bootstrap\LoadConfiguration` bootstrapper
 with `Laradic\Config\Bootstrap\LoadConfiguration` bootstrapper inside `app/Http/Kernel.php` and `app/Console/Kernel.php`. 
 
@@ -29,13 +41,6 @@ class Kernel extends HttpKernel {
     ];
 }
 ```
-
-Add the provider:
-
-```php
-"Laradic\Config\ConfigServiceProvider"
-```
-
 
 #### Basic usage
 Inside any ServiceProvider:
