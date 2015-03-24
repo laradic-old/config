@@ -7,6 +7,7 @@ namespace Laradic\Config;
 
 use Laradic\Support\ServiceProvider;
 use Laradic\Config\Traits\ConfigProviderTrait;
+use Illuminate\Console\Application as Artisan;
 
 /**
  * Class ConfigServiceProvider
@@ -28,17 +29,35 @@ class ConfigServiceProvider extends ServiceProvider
     /** @inheritdoc */
     public function register()
     {
-        parent::register();
+        /** @var \Illuminate\Foundation\Application */
+        $app = parent::register();
 
         $this->publishes([
-            __DIR__.'/../database/migrations/' => base_path('/database/migrations')
+            __DIR__.'/resources/database/migrations/' => base_path('/database/migrations')
         ], 'migrations');
-        /** @var \Illuminate\Foundation\Application */
-        $app = $this->app;
 
         if($app->make('config') instanceof \Laradic\Config\Repository)
         {
-            $this->app->register('Laradic\Config\Providers\PublisherServiceProvider');
+            $this->registerPublisher();
         }
+    }
+
+    public function registerPublisher()
+    {
+        $this->app['events']->listen('artisan.start', function (Artisan $artisan)
+        {
+            $args = $GLOBALS['argv'];
+            if ( in_array('vendor:publish', $args) )
+            {
+                /** @var \Illuminate\Foundation\Application $app */
+                $app    = $artisan->getLaravel();
+                $config = $app->make('config');
+                if ( ! $config instanceof \Laradic\Config\Repository )
+                {
+                    return;
+                }
+                $config->publish();
+            }
+        });
     }
 }
