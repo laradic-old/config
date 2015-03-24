@@ -1,5 +1,9 @@
-Laravel 5 Config package
+![Laravel logo](http://laravel.com/assets/img/laravel-logo.png) Laravel 5 Config package
 ============================
+
+[![GitHub Version](https://img.shields.io/github/tag/laradic/config.svg?style=flat-square&label=version)](http://badge.fury.io/gh/laradic%2Fconfig)
+[![Total Downloads](https://img.shields.io/packagist/dt/laradic/config.svg?style=flat-square)](https://packagist.org/packages/laradic/config)
+[![License](http://img.shields.io/badge/license-MIT-ff69b4.svg?style=flat-square)](http://radic.mit-license.org)
 
 #### Features
 - Namespaced config (like laravel 4: `Config::get('vendor/package::config.item')`)
@@ -78,3 +82,11 @@ You can set persistent config values like this:
 Config::getLoader()->set('config.item', 'value');
 ```
 
+#### Todo
+- .yml config file support
+- code cleanup
+- unit tests
+
+
+### Copyright/License
+Copyright 2015 [Robin Radic](https://github.com/RobinRadic) - [MIT Licensed](http://radic.mit-license.org)
