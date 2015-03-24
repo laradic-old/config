@@ -33,17 +33,17 @@ class LoadConfiguration
 
 
         $env = $app->environment();
-
-        $loader = new FileLoader(new Filesystem, $app['path.config']);
-        $app->instance('config', $config = new Repository($loader, $env));
+        $filesystem = new Filesystem;
+        $loader = new FileLoader($filesystem, $app['path.config']);
+        $app->instance('config', $config = new Repository($loader, $filesystem, $env));
         $loader->setRepository($config);
 
         $configuredLoader = $app['config']->get('laradic_config.loader');
         if(isset($configuredLoader) && $configuredLoader !== 'file'){
             if($configuredLoader === 'db')
             {
-                $loader = new DatabaseLoader(new Filesystem, $app['path.config']);
-                $app->instance('config', $config = new Repository($loader, $env));
+                $loader = new DatabaseLoader($filesystem, $app['path.config']);
+                $app->instance('config', $config = new Repository($loader, $filesystem, $env));
                 $app->booted(function() use ($app, $loader, $config){
                     $loader->setDatabase($app['db']->connection());
                     $loader->setDatabaseTable($app['config']->get('laradic_config.loaders.db.table'));

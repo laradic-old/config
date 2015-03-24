@@ -7,6 +7,7 @@ namespace Laradic\Config;
 
 use ArrayAccess;
 use Illuminate\Contracts\Config\Repository as ConfigContract;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Laradic\Config\Contracts\PackageRepository;
 use Laradic\Config\Loaders\LoaderInterface;
@@ -48,19 +49,58 @@ class Repository extends \Illuminate\Config\Repository implements ArrayAccess, C
      */
     protected $packages = [];
 
+    /** @var ConfigPublisher[] */
+    protected $publishers = [];
+
+    /** @var \Illuminate\Filesystem\Filesystem  */
+    protected $files;
+
     /**
      * Create a new configuration repository.
      *
-     * @param  \Laradic\Config\LoaderInterface $loader
-     * @param  string $environment
+     * @param \Laradic\Config\Loaders\LoaderInterface $loader
+     * @param \Illuminate\Filesystem\Filesystem       $files
+     * @param  string                                 $environment
      */
-    public function __construct(LoaderInterface $loader, $environment)
+    public function __construct(LoaderInterface $loader, Filesystem $files, $environment)
     {
 
         $this->setLoader($loader);
-
+        $this->files = $files;
         $this->environment = $environment;
     }
+
+    public function addPublisher($package, $sourcePath)
+    {
+        $this->publishers[$package] = ConfigPublisher::create($this->files)
+            ->package($package)
+            ->from($sourcePath);
+    }
+
+    public function getPublishers()
+    {
+        return $this->publishers;
+    }
+
+    public function publish($package = null)
+    {
+        if(is_null($package))
+        {
+            foreach($this->getPublishers() as $publisher)
+            {
+                $publisher->publish();
+            }
+        }
+        else
+        {
+            if(!isset($this->publishers[$package]))
+            {
+                throw new \InvalidArgumentException("Config publisher [$package] does not exist");
+            }
+            $this->publishers[$package]->publish();
+        }
+    }
+
 
     /**
      * Determine if the given configuration value exists.
@@ -92,7 +132,7 @@ class Repository extends \Illuminate\Config\Repository implements ArrayAccess, C
      * Get the specified configuration value.
      *
      * @param  string $key
-     * @param  mixed $default
+     * @param  mixed  $default
      * @return mixed
      */
     public function get($key, $default = null)
@@ -113,7 +153,7 @@ class Repository extends \Illuminate\Config\Repository implements ArrayAccess, C
      * Set a given configuration value.
      *
      * @param  string $key
-     * @param  mixed $value
+     * @param  mixed  $value
      * @return void
      */
     public function set($key, $value = null)
@@ -146,7 +186,7 @@ class Repository extends \Illuminate\Config\Repository implements ArrayAccess, C
      * Prepend a value onto an array configuration value.
      *
      * @param  string $key
-     * @param  mixed $value
+     * @param  mixed  $value
      * @return void
      */
     public function prepend($key, $value)
@@ -160,7 +200,7 @@ class Repository extends \Illuminate\Config\Repository implements ArrayAccess, C
      * Push a value onto an array configuration value.
      *
      * @param  string $key
-     * @param  mixed $value
+     * @param  mixed  $value
      * @return void
      */
     public function push($key, $value)
@@ -359,7 +399,7 @@ class Repository extends \Illuminate\Config\Repository implements ArrayAccess, C
      * Set a configuration option.
      *
      * @param  string $key
-     * @param  mixed $value
+     * @param  mixed  $value
      * @return void
      */
     public function offsetSet($key, $value)

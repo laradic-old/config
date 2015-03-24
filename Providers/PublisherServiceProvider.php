@@ -26,7 +26,7 @@ class PublisherServiceProvider extends ServiceProvider
     /** @inheritdoc */
     public function register()
     {
-        $this->app->bind('config.publisher', function ($app)
+        $this->app->singleton('config.publisher', function ($app)
         {
             return new Publisher($app['files'], $app['config']);
         });
@@ -40,14 +40,19 @@ class PublisherServiceProvider extends ServiceProvider
                 /** @var \Illuminate\Foundation\Application $app */
                 $app    = $artisan->getLaravel();
 
+
                 $config = $app->make('config');
                 if ( ! $config instanceof Repository )
                 {
                     return;
                 }
 
-                $publisher = $app->make('config.publisher');
-                print $publisher->publishAll()->output();
+                $config->publish();
+
+
+                #var_dump('publish');
+                #$publisher = $app->make('config.publisher');
+                #print $publisher->publishAll()->output();
             }
         });
     }

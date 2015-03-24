@@ -38,6 +38,7 @@ class Publisher
      */
     protected $output = [];
 
+
     /**
      * Create a new publisher instance.
      *
@@ -48,6 +49,7 @@ class Publisher
     {
         $this->files  = $files;
         $this->config = $config;
+
     }
 
     /**

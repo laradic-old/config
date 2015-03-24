@@ -5,6 +5,8 @@
 namespace Laradic\Config\Traits;
 
 use Laradic\Config\Contracts\PackageRepository;
+use Laradic\Config\Repository;
+use Laradic\Support\Path;
 use ReflectionClass;
 
 /**
@@ -35,14 +37,19 @@ trait ConfigProviderTrait
     public function addConfigComponent($package, $namespace, $path)
     {
         $config = $this->app['config'];
-        if ($config instanceof PackageRepository)
+        if ($config instanceof Repository)
         {
             $config->package($package, $path, $namespace);
+            $config->addPublisher($package, $path);
         }
     }
 
     public function guessConfigPath()
     {
+        if(isset($this->dir) and isset($this->resourcesPath))
+        {
+            return Path::join($this->dir, $this->resourcesPath, 'config');
+        }
         $path = (new ReflectionClass($this))->getFileName();
 
         return realpath(dirname($path) . '/../../');
@@ -56,5 +63,12 @@ trait ConfigProviderTrait
         }
 
         return $namespace;
+    }
+
+    protected function addPublisher($package, $sourceDir)
+    {
+        /** @var \Laradic\Config\Repository $config */
+        $config = $this->app['config'];
+        $config->addPublisher($package, $sourceDir);
     }
 }
