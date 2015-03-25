@@ -29,7 +29,7 @@ class ConfigServiceProvider extends ServiceProvider
     /** @inheritdoc */
     public function register()
     {
-        /** @var \Illuminate\Foundation\Application */
+        /** @var \Illuminate\Foundation\Application $app */
         $app = parent::register();
 
         $this->publishes([
