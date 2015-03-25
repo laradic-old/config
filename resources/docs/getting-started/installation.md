@@ -19,7 +19,6 @@ Replace the default laravel `Illuminate\Foundation\Bootstrap\LoadConfiguration` 
 with `Laradic\Config\Bootstrap\LoadConfiguration` bootstrapper inside `app/Http/Kernel.php` and `app/Console/Kernel.php`. 
 
 ```php
-<?php
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 class Kernel extends HttpKernel {
     protected $bootstrappers = [
