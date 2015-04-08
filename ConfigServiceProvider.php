@@ -60,4 +60,9 @@ class ConfigServiceProvider extends ServiceProvider
             }
         });
     }
+
+    public function provides()
+    {
+        return ['config'];
+    }
 }
