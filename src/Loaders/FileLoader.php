@@ -143,9 +143,9 @@ class FileLoader implements LoaderInterface
         # 2
         $file = "{$path}/{$environment}/{$group}";
         if ($this->files->exists("{$file}.php")) {
-            array_replace_recursive($items, $this->getRequire("{$file}.php"));
+            $items = array_replace_recursive($items, $this->getRequire("{$file}.php"));
         } elseif ($this->files->exists("{$file}.yml")) {
-            array_replace_recursive($items, $this->getYaml("{$file}.yml"));
+            $items = array_replace_recursive($items, $this->getYaml("{$file}.yml"));
         }
 
 

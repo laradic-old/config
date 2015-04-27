@@ -12,6 +12,7 @@ use Laradic\Config\Loaders\FileLoader;
 use Laradic\Config\Repository;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class LoadConfiguration
@@ -24,6 +25,10 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class LoadConfiguration
 {
+
+    /** @var \Illuminate\Filesystem\Filesystem */
+    protected $files;
+
     /**
      * Bootstrap the given application.
      *
@@ -35,23 +40,23 @@ class LoadConfiguration
 
 
         $env        = $app->environment();
-        $filesystem = new Filesystem;
-        $loader     = new FileLoader($filesystem, $app['path.config']);
-        $config = new Repository($loader, $filesystem, $env);
+        $filesystem = $this->files = new Filesystem;
+        $loader     = new FileLoader($filesystem, $app[ 'path.config' ]);
+        $config     = new Repository($loader, $filesystem, $env);
         $loader->setRepository($config);
         $app->instance('config', $config);
 
-        $configuredLoader = $app['config']->get('laradic_config.loader');
+        $configuredLoader = $app[ 'config' ]->get('laradic_config.loader');
         if ( isset($configuredLoader) && $configuredLoader !== 'file' )
         {
             if ( $configuredLoader === 'db' )
             {
-                $loader = new DatabaseLoader($filesystem, $app['path.config']);
+                $loader = new DatabaseLoader($filesystem, $app[ 'path.config' ]);
                 $config->setLoader($loader);
                 $app->booted(function () use ($app, $loader, $config)
                 {
-                    $loader->setDatabase($app['db']->connection());
-                    $loader->setDatabaseTable($app['config']->get('laradic_config.loaders.db.table'));
+                    $loader->setDatabase($app[ 'db' ]->connection());
+                    $loader->setDatabaseTable($app[ 'config' ]->get('laradic_config.loaders.db.table'));
                 });
                 $loader->setRepository($config);
             }
@@ -68,7 +73,7 @@ class LoadConfiguration
             $this->loadConfigurationFiles($app, $config);
         }
 
-        date_default_timezone_set($config['app.timezone']);
+        date_default_timezone_set($config[ 'app.timezone' ]);
 
         mb_internal_encoding('UTF-8');
     }
@@ -82,10 +87,17 @@ class LoadConfiguration
      */
     protected function loadConfigurationFiles(Application $app, \Illuminate\Contracts\Config\Repository $config)
     {
-        foreach ($this->getConfigurationFiles($app) as $key => $path)
+        foreach ( $this->getConfigurationFiles($app) as $key => $path )
         {
             $config->set($key, require $path);
         }
+
+        foreach ( $this->getConfigurationFilesYml($app) as $key => $path )
+        {
+            $c = Yaml::parse($this->files->get($path));
+            $config->set($key, $c);
+        }
+
     }
 
     /**
@@ -96,13 +108,33 @@ class LoadConfiguration
      */
     protected function getConfigurationFiles(Application $app)
     {
-        $files = [];
+        $files = [ ];
 
-        foreach (Finder::create()->files()->name('*.php')->in($app->configPath()) as $file)
+        foreach ( Finder::create()->files()->name('*.php')->in($app->configPath()) as $file )
         {
             $nesting = $this->getConfigurationNesting($file);
 
-            $files[$nesting . basename($file->getRealPath(), '.php')] = $file->getRealPath();
+            $files[ $nesting . basename($file->getRealPath(), '.php') ] = $file->getRealPath();
+        }
+
+        return $files;
+    }
+
+    /**
+     * Get all of the configuration files for the application.
+     *
+     * @param  \Illuminate\Contracts\Foundation\Application $app
+     * @return array
+     */
+    protected function getConfigurationFilesYml(Application $app)
+    {
+        $files = [ ];
+
+        foreach ( Finder::create()->files()->name('*.yml')->in($app->configPath()) as $file )
+        {
+            $nesting = $this->getConfigurationNesting($file);
+
+            $files[ $nesting . basename($file->getRealPath(), '.yml') ] = $file->getRealPath();
         }
 
         return $files;

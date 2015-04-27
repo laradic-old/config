@@ -64,7 +64,7 @@ class Repository extends \Illuminate\Config\Repository implements ArrayAccess, C
      */
     public function __construct(LoaderInterface $loader, Filesystem $files, $environment)
     {
-
+        parent::__construct();
         $this->setLoader($loader);
         $this->files = $files;
         $this->environment = $environment;
