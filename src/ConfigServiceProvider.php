@@ -24,7 +24,9 @@ class ConfigServiceProvider extends ServiceProvider
     protected $configFiles = ['laradic_config'];
 
     /** @var string */
-    protected $dir = __DIR__ . '/../';
+    protected $dir = __DIR__;
+
+    protected $resourcesPath = '../resources';
 
     /** @inheritdoc */
     public function register()
