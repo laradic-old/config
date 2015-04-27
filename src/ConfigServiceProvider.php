@@ -24,7 +24,7 @@ class ConfigServiceProvider extends ServiceProvider
     protected $configFiles = ['laradic_config'];
 
     /** @var string */
-    protected $dir = __DIR__;
+    protected $dir = __DIR__ . '/../';
 
     /** @inheritdoc */
     public function register()
@@ -33,7 +33,7 @@ class ConfigServiceProvider extends ServiceProvider
         $app = parent::register();
 
         $this->publishes([
-            __DIR__.'/resources/database/migrations/' => base_path('/database/migrations')
+            __DIR__.'/../resources/database/migrations/' => base_path('/database/migrations')
         ], 'migrations');
 
         if($app->make('config') instanceof \Laradic\Config\Repository)

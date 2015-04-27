@@ -24,11 +24,7 @@
     "prefer-stable": true,
     "require": {
         "php": ">=5.4.0",
-        "illuminate/config": "~5.0",
-        "laradic/support": "dev-master"
-    },
-    "require-dev": {
-        "laradic/dev": "dev-master"
+        "illuminate/config": "~5.0"
     },
     "scripts": {
     },
