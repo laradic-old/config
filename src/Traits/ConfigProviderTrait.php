@@ -17,6 +17,7 @@ use ReflectionClass;
  * @license     MIT
  * @copyright   2011-2015, Robin Radic
  * @link        http://radic.mit-license.org
+ * @property \Illuminate\Foundation\Application $app
  */
 trait ConfigProviderTrait
 {
@@ -24,8 +25,7 @@ trait ConfigProviderTrait
     public function addConfig($package, $namespace = null, $path = null)
     {
         $namespace = $this->getConfigNamespace($package, $namespace);
-        /** @var \Illuminate\Filesystem\Filesystem $files */
-        $files = $this->app['files'];
+        $files = $this->app->make('files');
         $path  = $path ?: $this->guessConfigPath();
 
         if ($files->isDirectory($config = $path . '/config'))
@@ -34,14 +34,23 @@ trait ConfigProviderTrait
         }
     }
 
+    /**
+     * addConfigComponent
+     *
+     * @param $package
+     * @param $namespace
+     * @param $path
+     * @return \Laradic\Config\Repository
+     */
     public function addConfigComponent($package, $namespace, $path)
     {
-        $config = $this->app['config'];
+        $config = $this->app->make('config');
         if ($config instanceof Repository)
         {
             $config->package($package, $path, $namespace);
             $config->addPublisher($package, $path);
         }
+        return array_dot($config->get($namespace . '::config'));
     }
 
     public function guessConfigPath()

@@ -8,7 +8,7 @@ namespace Laradic\Config;
 use ArrayAccess;
 use Illuminate\Contracts\Config\Repository as ConfigContract;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Arr;
+use Laradic\Support\Arrays;
 use Laradic\Config\Contracts\PackageRepository;
 use Laradic\Config\Loaders\LoaderInterface;
 use Laradic\Config\Traits\CascadingTrait;
@@ -146,7 +146,7 @@ class Repository extends \Illuminate\Config\Repository implements ArrayAccess, C
 
         $this->load($group, $namespace, $collection);
 
-        return Arr::get($this->items[$collection], $item, $default);
+        return Arrays::get($this->items[$collection], $item, $default);
     }
 
     /**
@@ -178,7 +178,7 @@ class Repository extends \Illuminate\Config\Repository implements ArrayAccess, C
         }
         else
         {
-            Arr::set($this->items[$collection], $item, $value);
+            Arrays::set($this->items[$collection], $item, $value);
         }
     }
 

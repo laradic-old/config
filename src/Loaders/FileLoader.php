@@ -7,9 +7,10 @@ namespace Laradic\Config\Loaders;
 
 use Illuminate\Filesystem\Filesystem;
 use Laradic\Config\Repository;
-use Laradic\Support\Arr;
+use Laradic\Support\Arrays;
 use Laradic\Support\Path;
-use Laradic\Support\Str;
+use Laradic\Support\String;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class FileLoader
@@ -27,7 +28,7 @@ class FileLoader implements LoaderInterface
     /**
      * The config repository instance.
      *
-     * @var \Illuminate\Contracts\Config\Repository
+     * @var \Laradic\Config\Repository
      */
     protected $repository;
 
@@ -40,7 +41,7 @@ class FileLoader implements LoaderInterface
     /**
      * The filesystem instance.
      *
-     * @var \Illuminate\Filesystem\Filesystem
+     * @var \Laradic\Support\Filesystem
      */
     protected $files;
 
@@ -95,7 +96,7 @@ class FileLoader implements LoaderInterface
         list($namespace, $group, $item) = $this->repository->parseKey($key);
         $environment = $environment ? $environment : $this->repository->getEnvironment();
 
-        $path = Str::remove($this->getPath($namespace), Path::canonicalize(base_path()));
+        $path = String::remove($this->getPath($namespace), Path::canonicalize(base_path()));
 
         $saveDir = $this->laradicConfig['loaders.file.save_path'] . "{$path}/{$environment}";
         $saveFile = "{$saveDir}/{$group}.php";
@@ -125,44 +126,37 @@ class FileLoader implements LoaderInterface
     public function load($environment, $group, $namespace = null)
     {
         $items = [];
-
-        // First we'll get the root configuration path for the environment which is
-        // where all of the configuration files live for that namespace, as well
-        // as any environment folders with their specific configuration items.
         $path = $this->getPath($namespace);
 
         if (is_null($path)) {
             return $items;
         }
 
-        // First we'll get the main configuration file for the groups. Once we have
-        // that we can check for any environment specific files, which will get
-        // merged on top of the main arrays to make the environments cascade.
-        $file = "{$path}/{$group}.php";
-
-        if ($this->files->exists($file)) {
-            $items = $this->files->getRequire($file);
+        # 1
+        $file = "{$path}/{$group}";
+        if ($this->files->exists("{$file}.php")) {
+            $items = $this->getRequire("{$file}.php");
+        } elseif($this->files->exists("{$file}.yml")) {
+            $items = $this->getYaml("{$file}.yml");
         }
 
-        // Finally we're ready to check for the environment specific configuration
-        // file which will be merged on top of the main arrays so that they get
-        // precedence over them if we are currently in an environments setup.
-        $file = "{$path}/{$environment}/{$group}.php";
-
-        if ($this->files->exists($file)) {
-            $items = $this->mergeEnvironment($items, $file);
+        # 2
+        $file = "{$path}/{$environment}/{$group}";
+        if ($this->files->exists("{$file}.php")) {
+            array_replace_recursive($items, $this->getRequire("{$file}.php"));
+        } elseif ($this->files->exists("{$file}.yml")) {
+            array_replace_recursive($items, $this->getYaml("{$file}.yml"));
         }
 
 
-        // Now we load the saved items that have been saved with set, and merge them over the current items
-        $path = Str::remove($path, Path::canonicalize(base_path()));
-        #$saveDir = $this->repository->get('laradic_config.loaders.file.save_path');
+        # Persisted  config loading
+        $path = String::remove($path, Path::canonicalize(base_path()));
         $saveDir = $this->laradicConfig['loaders.file.save_path'] . "{$path}/{$environment}";
         $saveFile = "{$saveDir}/{$group}.php";
 
         $savedItems = [];
         if($this->files->exists($saveFile)){
-            $savedItems = require $saveFile;
+            $savedItems = $this->files->getRequire($saveFile);
         }
 
         $items = array_merge($items, $savedItems);
@@ -170,17 +164,7 @@ class FileLoader implements LoaderInterface
         return $items;
     }
 
-    /**
-     * Merge the items in the given file into the items.
-     *
-     * @param  array   $items
-     * @param  string  $file
-     * @return array
-     */
-    protected function mergeEnvironment(array $items, $file)
-    {
-        return array_replace_recursive($items, $this->files->getRequire($file));
-    }
+
 
     /**
      * Determine if the given group exists.
@@ -193,26 +177,17 @@ class FileLoader implements LoaderInterface
     {
         $key = $group.$namespace;
 
-        // We'll first check to see if we have determined if this namespace and
-        // group combination have been checked before. If they have, we will
-        // just return the cached result so we don't have to hit the disk.
         if (! isset($this->exists[$key])) {
 
             $path = $this->getPath($namespace);
 
-            // To check if a group exists, we will simply get the path based on the
-            // namespace, and then check to see if this files exists within that
-            // namespace. False is returned if no path exists for a namespace.
             if (is_null($path)) {
                 return $this->exists[$key] = false;
             }
 
-            $file = "{$path}/{$group}.php";
+            $file = "{$path}/{$group}";
 
-            // Finally, we can simply check if this file exists. We will also cache
-            // the value in an array so we don't have to go through this process
-            // again on subsequent checks for the existing of the config file.
-            $this->exists[$key] = $this->files->exists($file);
+            $this->exists[$key] = $this->files->exists("{$file}.php") or $this->files->exists("{$file}.yml");
         }
 
         return $this->exists[$key];
@@ -229,22 +204,22 @@ class FileLoader implements LoaderInterface
      */
     public function cascadePackage($env, $package, $group, $items)
     {
-        // First we will look for a configuration file in the packages configuration
-        // folder. If it exists, we will load it and merge it with these original
-        // options so that we will easily "cascade" a package's configurations.
-        $file = "packages/{$package}/{$group}.php";
 
-        if ($this->files->exists($path = $this->defaultPath.'/'.$file)) {
+        $file = "packages/{$package}/{$group}";
+
+        if ($this->files->exists($path = $this->defaultPath.'/'.$file.'.php')) {
             $items = array_merge($items, $this->getRequire($path));
+        } elseif ($this->files->exists($path = $this->defaultPath.'/'.$file.'.yml')) {
+            $items = array_merge($items, $this->getYaml($path));
         }
 
-        // Once we have merged the regular package configuration we need to look for
-        // an environment specific configuration file. If one exists, we will get
-        // the contents and merge them on top of this array of options we have.
+        // @todo to yaml
         $path = $this->getPackagePath($env, $package, $group);
 
-        if ($this->files->exists($path)) {
-            $items = array_merge($items, $this->getRequire($path));
+        if ($this->files->exists("{$path}.php")) {
+            $items = array_merge($items, $this->getRequire("{$path}.php"));
+        } elseif ($this->files->exists("{$path}.yml")) {
+            $items = array_merge($items, $this->getYaml("{$path}.yml"));
         }
 
         return $items;
@@ -260,7 +235,7 @@ class FileLoader implements LoaderInterface
      */
     protected function getPackagePath($env, $package, $group)
     {
-        $file = "packages/{$package}/{$env}/{$group}.php";
+        $file = "packages/{$package}/{$env}/{$group}";
 
         return $this->defaultPath.'/'.$file;
     }
@@ -314,6 +289,18 @@ class FileLoader implements LoaderInterface
         return $this->files->getRequire($path);
     }
 
+
+    /**
+     * Get a YAML file's parsed content
+     *
+     * @param  string  $path
+     * @return array
+     */
+    protected function getYaml($path)
+    {
+        return Yaml::parse($this->files->get($path));
+    }
+
     /**
      * Get the Filesystem instance.
      *
@@ -333,6 +320,6 @@ class FileLoader implements LoaderInterface
     public function setRepository(Repository $repository)
     {
         $this->repository = $repository;
-        $this->laradicConfig = Arr::dot($repository->get('laradic_config'));
+        $this->laradicConfig = array_dot($repository->get('laradic_config'));
     }
 }
