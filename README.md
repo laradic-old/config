@@ -1,21 +1,42 @@
-![Laravel logo](http://laravel.com/assets/img/laravel-logo.png) Laravel 5 Config package
+<a name="top"></a>![Laravel logo](http://laravel.com/assets/img/laravel-logo.png) Laravel 5 Config package
 ============================
 
 [![GitHub Version](https://img.shields.io/github/tag/laradic/config.svg?style=flat-square&label=version)](http://badge.fury.io/gh/laradic%2Fconfig)
 [![Total Downloads](https://img.shields.io/packagist/dt/laradic/config.svg?style=flat-square)](https://packagist.org/packages/laradic/config)
 [![License](http://img.shields.io/badge/license-MIT-ff69b4.svg?style=flat-square)](http://radic.mit-license.org)
 
-#### Features
+## Version 1.3
+
+### Features
 - Namespaced config (like laravel 4: `Config::get('vendor/package::config.item')`)
 - Namespaced publishing (like laravel 4: `config/packages/VENDOR/PACKAGE/config.php`)
-- Persistent configuration. Save changes to file or database.
-- Compatible with laravel 5 default configs. Adding the package will not invalidate your current setup.
+- Or use the standard Laravel 5 way:     Compatible with laravel 5 default configs. Adding the package will not invalidate your current setup. 
+- Persistent configuration. Save changes to a **`mirroring` `file` or `database`**.
+- `Config::getLoader()->set('iam/awesome::my.config.key', 'A changed value')` saves it to a **mirroring** `file` or `db`
+- Supports **PHP**, **YAML** and soon also **XML** configuration files.
 
-#### Installation
+  
+-----------
+  
+<a name="overview"></a>
+### Overview <sub>[^](#top)</sub>
+- [Features](#top)
+- [Overview](#overview)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Persistent config](#persistent)
+- [Todo](#todo)
+- [Copyright/license](#copyright)
+  
+-----------
+
+
+<a name="installation"></a>
+### Installation <sub>[^](#top)</sub>
 
 ###### Composer
 ```php
-"laradic/config": "1.*"
+"laradic/config": "1.3.*"
 ```
 
 ###### Service provider
@@ -41,8 +62,10 @@ class Kernel extends HttpKernel {
     ];
 }
 ```
-
-#### Basic usage
+  
+  
+<a name="usage"></a>
+### Basic usage <sub>[^](#top)</sub>
 Inside any ServiceProvider:
 
 ```php
@@ -58,12 +81,15 @@ class YourServiceProvider extends ServiceProvider
 ```
 - Namespaced configuration can be accessed with `Config::get('vendorname/packagename::config.item')`. 
 - Publishing the config file is done with the default laravel `vendor:publish` command.
- 
- 
-#### Persistent config
-You can set persistent config items, by default the values will be saved in a seperate file that gets merged. It is also possible to save to database.
+  
+  
+  
+<a name="persistent"></a>
+### Persistent config <sub>[^](#top)</sub>
+You can set persistent config items, by default the values will be saved in a seperate, mirrored file that gets merged on boot. 
+It is also possible to save to database.
 
-Inside the config file you can change the save method by changing the `loader` value.
+Inside the config file you can change the save method by changing the [`loader`] value.
 
 ```php
 return array(
@@ -86,12 +112,17 @@ You can set persistent config values like this:
 ```php
 Config::getLoader()->set('config.item', 'value');
 ```
-
-#### Todo
-- .yml config file support
-- code cleanup
-- unit tests
-
-
-### Copyright/License
+  
+  
+  
+<a name="todo"></a>
+### Todo <sub>[^](#top)</sub>
+- [x] YAML/YML file support.
+- [x] Database saving
+- [ ] XML file support
+- [ ] Unit tests
+  
+  
+<a name="copyright"></a>
+### Copyright/License <sub>[^](#top)</sub>
 Copyright 2015 [Robin Radic](https://github.com/RobinRadic) - [MIT Licensed](http://radic.mit-license.org)
