@@ -49,8 +49,9 @@ trait ConfigProviderTrait
         {
             $config->package($package, $path, $namespace);
             $config->addPublisher($package, $path);
+            return array_dot($config->get($namespace . '::config'));
         }
-        return array_dot($config->get($namespace . '::config'));
+
     }
 
     public function guessConfigPath()

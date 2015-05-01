@@ -187,7 +187,18 @@ class FileLoader implements LoaderInterface
 
             $file = "{$path}/{$group}";
 
-            $this->exists[$key] = $this->files->exists("{$file}.php") or $this->files->exists("{$file}.yml");
+
+            $this->exists[$key] = false;
+
+            if($this->files->exists("{$file}.php"))
+            {
+                $this->exists[$key] = true;
+            }
+            if($this->files->exists("{$file}.yml"))
+            {
+                $this->exists[$key] = true;
+            }
+
         }
 
         return $this->exists[$key];
