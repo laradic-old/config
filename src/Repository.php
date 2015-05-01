@@ -13,7 +13,7 @@ use Laradic\Config\Contracts\PackageRepository;
 use Laradic\Config\Loaders\LoaderInterface;
 use Laradic\Config\Traits\CascadingTrait;
 use Laradic\Config\Traits\LoadingTrait;
-use Laradic\Support\Traits\NamespacedItemResolverTrait;
+use Laradic\Support\Traits\NamespacedItemResolver;
 
 /**
  * Class Repository
@@ -29,7 +29,7 @@ class Repository extends \Illuminate\Config\Repository implements ArrayAccess, C
 {
     use CascadingTrait, LoadingTrait;
 
-    use NamespacedItemResolverTrait
+    use NamespacedItemResolver
     {
         parseNamespacedSegments as parentParseNamespacedSegments;
         parseBasicSegments as parentParseBasicSegments;
