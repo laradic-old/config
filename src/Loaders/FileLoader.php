@@ -90,7 +90,7 @@ class FileLoader implements LoaderInterface
     {
         if ( ! isset($this->repository))
         {
-            throw new \RuntimeException("Repository is required to set a config value. Use persist() instead.");
+            throw new \RuntimeException('Repo is needed to set config.');
         }
 
         list($namespace, $group, $item) = $this->repository->parseKey($key);
@@ -153,6 +153,8 @@ class FileLoader implements LoaderInterface
         $path = String::remove($path, Path::canonicalize(base_path()));
         $saveDir = $this->laradicConfig['loaders.file.save_path'] . "{$path}/{$environment}";
         $saveFile = "{$saveDir}/{$group}.php";
+
+
 
         $savedItems = [];
         if($this->files->exists($saveFile)){

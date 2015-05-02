@@ -24,7 +24,7 @@ class DatabaseLoader extends FileLoader implements LoaderInterface
     /**
      * The database instance.
      *
-     * @var Illuminate\Database\Connection
+     * @var \Illuminate\Database\Connection
      */
     protected $database;
 
@@ -40,7 +40,7 @@ class DatabaseLoader extends FileLoader implements LoaderInterface
     {
         if ( ! isset($this->repository) )
         {
-            throw new \RuntimeException("Repository is required to set a config value. Use persist() instead.");
+            throw new \RuntimeException('Repo is needed to set config.');
         }
 
         list($namespace, $group, $item) = $this->repository->parseKey($key);
@@ -54,10 +54,10 @@ class DatabaseLoader extends FileLoader implements LoaderInterface
      *
      * @param  string $environment
      * @param  string $group
-     * @param  string $name
-     * @param  mixed $value
+     * @param         $item
+     * @param  mixed  $value
      * @param  string $namespace
-     * @return void
+     * @internal param string $name
      */
     public function persist($environment, $group, $item, $value = null, $namespace = null)
     {
@@ -80,7 +80,7 @@ class DatabaseLoader extends FileLoader implements LoaderInterface
             if ( isset($value) )
             {
                 // We'll update an existing record
-                $query->update(array('value' => $this->prepareValue($value)));
+                $query->update(array( 'value' => $this->prepareValue($value) ));
             }
             else
             {
@@ -90,11 +90,11 @@ class DatabaseLoader extends FileLoader implements LoaderInterface
         elseif ( isset($value) )
         {
             // Prepare our data
-            $data          = compact('environment', 'group', 'item');
-            $data['value'] = $this->prepareValue($value);
+            $data            = compact('environment', 'group', 'item');
+            $data[ 'value' ] = $this->prepareValue($value);
             if ( isset($namespace) )
             {
-                $data['namespace'] = $namespace;
+                $data[ 'namespace' ] = $namespace;
             }
 
             $this
@@ -116,8 +116,7 @@ class DatabaseLoader extends FileLoader implements LoaderInterface
     /**
      * Sets the database connection.
      *
-     * @param  Illuminate\Database\Connection $database
-     * @return void
+     * @param \Illuminate\Database\Connection|\Illuminate\Database\ConnectionInterface $database
      */
     public function setDatabase(ConnectionInterface $database)
     {
@@ -127,8 +126,7 @@ class DatabaseLoader extends FileLoader implements LoaderInterface
     /**
      * Set the repository instance on the composite loader.
      *
-     * @param  Illuminate\Config\Repository $repository
-     * @return void
+     * @param \Illuminate\Config\Repository|\Laradic\Config\Repository $repository
      */
     public function setRepository(Repository $repository)
     {
@@ -146,7 +144,7 @@ class DatabaseLoader extends FileLoader implements LoaderInterface
         $this->databaseTable = $databaseTable;
         $configs             = $this->database->table($databaseTable)->get();
 
-        foreach ($configs as $key => $config)
+        foreach ( $configs as $key => $config )
         {
             $k = '';
             if ( $config->namespace )
@@ -162,11 +160,11 @@ class DatabaseLoader extends FileLoader implements LoaderInterface
      * Returns a query builder object for the given environment, group
      * and namespace.
      *
-     * @param  string $environment
-     * @param  string $group
-     * @param  string $namespace
-     * @param  string $fallback
-     * @return \Illuminate\Database\Query  $query
+     * @param  string     $environment
+     * @param  string     $group
+     * @param  string     $namespace
+     * @param bool|string $fallback
+     * @return \Illuminate\Database\Query $query
      */
     protected function getGroupQuery($environment, $group, $namespace, $fallback = true)
     {
@@ -235,9 +233,7 @@ class DatabaseLoader extends FileLoader implements LoaderInterface
      */
     protected function prepareValue($value)
     {
-        // We will always JSON encode the value. This allows us to store "null", "true"
-        // and "false" values in the database (as an example), which may mean completely
-        // different things.
+
         return json_encode($value);
     }
 }
