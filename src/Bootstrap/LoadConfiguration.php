@@ -39,6 +39,8 @@ class LoadConfiguration
     {
 
 
+        /** @var \Illuminate\Foundation\Application $app*/
+
         $env        = $app->environment();
         $filesystem = $this->files = new Filesystem;
         $loader     = new FileLoader($filesystem, $app[ 'path.config' ]);
@@ -70,7 +72,7 @@ class LoadConfiguration
         }
         if ( ! isset($loadedFromCache) )
         {
-            $this->loadConfigurationFiles($app, $config);
+           # $this->loadConfigurationFiles($app, $config);
         }
 
         date_default_timezone_set($config[ 'app.timezone' ]);

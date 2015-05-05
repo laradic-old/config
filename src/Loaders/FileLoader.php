@@ -76,6 +76,7 @@ class FileLoader implements LoaderInterface
     {
         $this->files = $files;
         $this->defaultPath = $defaultPath;
+        #$this->laradicConfig = array_dot($files->getRequire(Path::join($defaultPath, 'laradic_config.php')));
     }
 
     /**
@@ -98,23 +99,24 @@ class FileLoader implements LoaderInterface
 
         $path = String::remove($this->getPath($namespace), Path::canonicalize(base_path()));
 
-        $saveDir = $this->laradicConfig['loaders.file.save_path'] . "{$path}/{$environment}";
-        $saveFile = "{$saveDir}/{$group}.php";
+        $parts = "{$environment} - {$namespace} - {$group} - {$item} - {$value}";
 
-        if(!$this->files->isDirectory($saveDir)){
-            $this->files->makeDirectory($saveDir, 0777, true);
+        $f = $this->files;
+        $storPath = $this->laradicConfig['loaders.file.save_path'];
+
+        $fileName = "global.php";
+        if($namespace){
+            $fileName = (string) \Stringy\Stringy::create($namespace)->slugify()->ensureRight('.php');
         }
+        $file = path_join($storPath, $fileName);
+        $items = $f->exists($file) ? $f->getRequire($file) : [];
+        $dest = "{$environment}.{$group}" . (isset($item) ? ".{$item}" : '');
+        array_set($items, $dest, $value);
+        $this->files->put($file, "<?php \n return " . var_export($items, true) . ';');
 
-        $items = [];
-        if($this->files->exists($saveFile)){
-            $items = require $saveFile;
-        }
 
-        $items[$item] = $value;
 
-        $this->files->put($saveFile, "<?php \n return " . var_export($items, true) . ';');
     }
-
     /**
      * Load the given configuration group.
      *
@@ -149,19 +151,21 @@ class FileLoader implements LoaderInterface
         }
 
 
-        # Persisted  config loading
-        $path = String::remove($path, Path::canonicalize(base_path()));
-        $saveDir = $this->laradicConfig['loaders.file.save_path'] . "{$path}/{$environment}";
-        $saveFile = "{$saveDir}/{$group}.php";
+        if($namespace === null){
 
+            $f = $this->files;
+            $storPath = $this->laradicConfig['loaders.file.save_path'];
+            $file = Path::join($storPath, 'global.php');
+            if($f->exists($file)){
+                $my_items = $f->getRequire($file);
+                $my_items = array_get($my_items, "{$environment}.{$group}");
+                if($my_items)
+                {
+                    $items = array_replace_recursive($items, $my_items);
+                }
+            }
 
-
-        $savedItems = [];
-        if($this->files->exists($saveFile)){
-            $savedItems = $this->files->getRequire($saveFile);
         }
-
-        $items = array_merge($items, $savedItems);
 
         return $items;
     }
@@ -233,6 +237,19 @@ class FileLoader implements LoaderInterface
             $items = array_merge($items, $this->getRequire("{$path}.php"));
         } elseif ($this->files->exists("{$path}.yml")) {
             $items = array_merge($items, $this->getYaml("{$path}.yml"));
+        }
+
+        $f = $this->files;
+        $storPath = $this->laradicConfig['loaders.file.save_path'];
+        $fileName = (string) \Stringy\Stringy::create($package)->slugify()->ensureRight('.php');
+        $file = Path::join($storPath, $fileName);
+        if($f->exists($file)){
+            $my_items = $f->getRequire($file);
+            $my_items = array_get($my_items, "{$env}.{$group}");
+            if($my_items)
+            {
+                $items = array_replace_recursive($items, $my_items);
+            }
         }
 
         return $items;
