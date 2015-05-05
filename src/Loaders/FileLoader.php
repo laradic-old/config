@@ -108,7 +108,7 @@ class FileLoader implements LoaderInterface
         if($namespace){
             $fileName = (string) \Stringy\Stringy::create($namespace)->slugify()->ensureRight('.php');
         }
-        $file = path_join($storPath, $fileName);
+        $file = Path::join($storPath, $fileName);
         $items = $f->exists($file) ? $f->getRequire($file) : [];
         $dest = "{$environment}.{$group}" . (isset($item) ? ".{$item}" : '');
         array_set($items, $dest, $value);
