@@ -26,7 +26,6 @@ class ConfigServiceProvider extends ServiceProvider
     /** @var string */
     protected $dir = __DIR__;
 
-    protected $resourcesPath = '../resources';
 
     /** @inheritdoc */
     public function register()
