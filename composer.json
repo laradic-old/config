@@ -27,8 +27,10 @@
         "illuminate/config": "~5.0",
         "laradic/support": "1.2.*"
     },
-    "require-dev": {
-        "laradic/dev": "dev-master"
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "2.1.x-dev"
+        }
     },
     "scripts": {
     },
