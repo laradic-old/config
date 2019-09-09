@@ -23,12 +23,14 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": ">=5.4.0",
-        "illuminate/config": "~5.0",
-        "laradic/support": "1.2.*"
+        "php": ">=7.1.0",
+        "illuminate/config": "~5.0|~6.0",
+        "laradic/support": "~2.0"
     },
-    "require-dev": {
-        "laradic/dev": "dev-master"
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "2.1.x-dev"
+        }
     },
     "scripts": {
     },
